@@ -1,15 +1,15 @@
-#HUR XI VARIERAR MED TIDEN. KOLLA OLIKA BEGYNNELSEVILLKOR. Dxi/Dt
+
 
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
 import numpy as np
 import math as m
 
-
+#Våra värden
 a = 9
 b = 1
-xi0 = np.array([0.5,0]) #Startplats för xi
-w0 = 0	#Rad per sekund
+xi0 = np.array([0.5,0]) #Begynnelsevärden
+w0 = 3	#Rad per sekund
 g = 9.81 #Gravitation
 
 

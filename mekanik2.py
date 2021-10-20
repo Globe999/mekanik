@@ -5,55 +5,77 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math as m
 
-omega = 10
+omega = 80
+
 t = 1
 g = 9.81 #Gravitation
-u0 = np.array([1,1])
-#Längder
-L=2
-r1 = 1
-r2 = 1
-R = 1
+
+#Startvärden i radianer
+U0 = [0.0174533, 0]
+#Längder i meter
+L=1
+r1 = 0.04
+r2 = 0.05
+R = 0.05
+
+#kg/m^3
+p = 7800
 #Vikter
-m1 = 10
-m2 = 20
+v1 = (4*m.pi*m.pow(r1,3))/3
+v2 = (4*m.pi*m.pow(r2,3))/3-v1
+m1 = p * v1
+m2 = p * v2
 M = m1+m2
 
 
 i2 = (2/3)*m.pow(r2,2)*m2
-
 l = (i2 + M*m.pow((L+r2),2))/(M*(L+r2))
 
-def dU_dx(U,t):
-    return [U[1], -(((R*m.pow(omega,2)*m.sin(omega*t)-g)*U[0]+R*m.pow(omega, 2)*m.cos(omega*t))/l)]
+def dU_dt(U,t):
+    return [U[1],-(((R*m.pow(omega,2)*m.sin(omega*t)-g)*U[0]+R*m.pow(omega, 2)*m.cos(omega*t))/l)]
 
-U0 = [0, 0]
-xs = np.linspace(0, 100, 200)
-Us = odeint(dU_dx, U0, xs)
-ys = Us[:,0]
+xs = np.linspace(0, 100, 10000)
+
+sol1 = odeint(dU_dt, U0, xs)
+omega = 90
+sol2 = odeint(dU_dt, U0, xs)
+omega = 95
+sol3 = odeint(dU_dt, U0, xs)
+omega = 100
+sol4 = odeint(dU_dt, U0, xs)
+omega = 130
+sol5 = odeint(dU_dt, U0, xs)
+omega = 1000
+sol6 = odeint(dU_dt, U0, xs)
 
 
-plt.xlabel("x")
-plt.ylabel("y")
-plt.title("Pendeljävel")
-plt.plot(xs,ys);
+
+fig, axs = plt.subplots(3,2,sharex=True)
+
+fig.suptitle("Omega at 80, 90, 95, 100, 130 & 1000")
+axs[0,0].plot(xs,sol1[:,0])
+axs[0,0].set_title("Omega = 80")
+
+axs[0,1].plot(xs,sol2[:,0])
+axs[0,1].set_title("Omega = 90")
+
+axs[1,0].plot(xs,sol3[:,0])
+axs[1,0].set_title("Omega = 95")
+
+axs[1,1].plot(xs,sol4[:,0])
+axs[1,1].set_title("Omega = 100")
+
+axs[2,0].plot(xs,sol5[:,0])
+axs[2,0].set_title("Omega = 130")
+
+axs[2,1].plot(xs,sol6[:,0])
+axs[2,1].set_title("Omega = 1000")
+
+fig.add_subplot(111, frame_on=False)
+plt.tick_params(labelcolor="none", bottom=False, left=False)
+
+plt.xlabel("Time [s]")
+plt.ylabel("Phi [rad]")
+
+
 plt.show()
-
-
-#initial vid tiden 0
-#stop time
-# timeSpan = np.array([0, 100])
-# tend = 10
-
-
-# # solve ODE
-# #solve_ivp(<fn name>, <timespan[]>, <y0>)
-# sol = None
-
-# sol = solve_ivp(f, timeSpan, fi0, t_eval=np.linspace(0,tend,10000))
-# print(sol)
-# #plot results
-# plt.plot(sol.t,sol.y[0,:])
-# plt.xlabel("time")
-# plt.ylabel("eta(t)")
-# plt.show()
