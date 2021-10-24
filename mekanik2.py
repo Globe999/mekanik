@@ -1,18 +1,16 @@
-#HUR XI VARIERAR MED TIDEN. KOLLA OLIKA BEGYNNELSEVILLKOR. Dxi/Dt
-
-from scipy.integrate import solve_ivp, odeint
+from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 import numpy as np
 import math as m
 
+#####################################
+##          VALUES                 ##
+#####################################
 omega = 80
-
 t = 1
-g = 9.81 #Gravitation
-
-#Startvärden i radianer
-U0 = [0.0174533, 0]
-#Längder i meter
+g = 9.81
+U0 = [0.0174533, 0] #Startvärden i radianer
+#Meters
 L=1
 r1 = 0.04
 r2 = 0.05
@@ -26,22 +24,28 @@ v2 = (4*m.pi*m.pow(r2,3))/3-v1
 m1 = p * v1
 m2 = p * v2
 M = m1+m2
-
-
 i2 = (2/3)*m.pow(r2,2)*m2
 l = (i2 + M*m.pow((L+r2),2))/(M*(L+r2))
 
+
+#####################################
+##          Function               ##
+#####################################
 def dU_dt(U,t):
     return [U[1],-(((R*m.pow(omega,2)*m.sin(omega*t)-g)*U[0]+R*m.pow(omega, 2)*m.cos(omega*t))/l)]
 
 xs = np.linspace(0, 100, 10000)
 
+#####################################
+##  Solve for different omgeas     ##
+#####################################
 sol1 = odeint(dU_dt, U0, xs)
 omega = 90
 sol2 = odeint(dU_dt, U0, xs)
 omega = 95
 sol3 = odeint(dU_dt, U0, xs)
 omega = 100
+maxval = np.max(sol3[:,0])
 sol4 = odeint(dU_dt, U0, xs)
 omega = 130
 sol5 = odeint(dU_dt, U0, xs)
@@ -49,10 +53,16 @@ omega = 1000
 sol6 = odeint(dU_dt, U0, xs)
 
 
+print(maxval)
+
+#####################################
+##            Plot                 ##
+#####################################
 
 fig, axs = plt.subplots(3,2,sharex=True)
 
 fig.suptitle("Omega at 80, 90, 95, 100, 130 & 1000")
+#plot graphs
 axs[0,0].plot(xs,sol1[:,0])
 axs[0,0].set_title("Omega = 80")
 
@@ -76,6 +86,5 @@ plt.tick_params(labelcolor="none", bottom=False, left=False)
 
 plt.xlabel("Time [s]")
 plt.ylabel("Phi [rad]")
-
 
 plt.show()
